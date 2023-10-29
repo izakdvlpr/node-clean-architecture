@@ -1,0 +1,35 @@
+{
+  "name": "node-clean-architecture",
+  "version": "1.0.0",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint ./ --ext \"js,ts\"",
+    "lint:fix": "eslint ./ --ext \"js,ts\" --fix",
+    "prisma:pg:generate": "bunx prisma generate --schema src/infra/database/prisma/postgresql/schema.prisma",
+    "prisma:pg:migrations": "bunx prisma migrate dev --skip-generate --schema src/infra/database/prisma/postgresql/schema.prisma",
+    "test:all": "bun test",
+    "test:watch": "bun test --watch",
+    "test:cov": "bun test --coverage",
+    "dev": "bun run --watch src/index.ts",
+    "build": "bun build ./src/index.ts --outdir ./dist",
+    "start": "bun run dist/index.js"
+  },
+  "prisma": {
+    "schema": "src/infra/database/prisma/postgresql/schema.prisma"
+  },
+  "dependencies": {
+    "@fastify/cors": "^8.4.1",
+    "@prisma/client": "5.5.2",
+    "envalid": "^8.0.0",
+    "fastify": "latest"
+  },
+  "devDependencies": {
+    "@rocketseat/eslint-config": "^2.1.0",
+    "bun-types": "latest",
+    "prisma": "^5.5.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

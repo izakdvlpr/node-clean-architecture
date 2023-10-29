@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    volumes:
+      - ./:/app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:9.4
+    restart: always
+    tty: true
+    volumes:
+      - ./.pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=docker
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=docker
