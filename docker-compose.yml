@@ -3,22 +3,36 @@ version: "3.9"
 services:
   app_development:
     build:
-      context: ./.docker
+      context: .
       dockerfile: Dockerfile.development
     volumes:
       - ./:/app
+    env_file:
+      - .env
+    environment:
+      FASTIFY_SERVER_HOST: ${FASTIFY_SERVER_HOST}
+      FASTIFY_SERVER_PORT: ${FASTIFY_SERVER_PORT}
+      JWT_TOKEN: ${JWT_TOKEN}
+      DATABASE_URL: ${DATABASE_URL}
     ports:
-      - "5000:5000"
+      - ${FASTIFY_SERVER_PORT}:${FASTIFY_SERVER_PORT}
     depends_on:
       - postgres
     profiles:
       - development
   app_production:
     build:
-      context: ./.docker
+      context: .
       dockerfile: Dockerfile.production
+    env_file:
+      - .env
+    environment:
+      FASTIFY_SERVER_HOST: ${FASTIFY_SERVER_HOST}
+      FASTIFY_SERVER_PORT: ${FASTIFY_SERVER_PORT}
+      JWT_TOKEN: ${JWT_TOKEN}
+      DATABASE_URL: ${DATABASE_URL}
     ports:
-      - "5000:5000"
+      - ${FASTIFY_SERVER_PORT}:${FASTIFY_SERVER_PORT}
     depends_on:
       - postgres
     profiles:
@@ -35,16 +49,3 @@ services:
       - POSTGRES_DB=node
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=docker
-    profiles:
-      - production
-      - development
-  pgadmin:
-    image: dpage/pgadmin4
-    tty: true
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@user.com
-      - PGADMIN_DEFAULT_PASSWORD=123456
-    ports:
-      - "9000:2345"
-    depends_on:
-      - postgres
