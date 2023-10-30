@@ -8,9 +8,13 @@ import { CreateUserDTO } from '@/application/dtos/CreateUserDTO'
 import { Result } from '@/core/logic/Result'
 import { Username } from '@/domain/valueObjects/username'
 import { Password } from '@/domain/valueObjects/password'
+import { UsernameAlreadyExistsError } from './errors/UsernameAlreadyExistsError'
 
 export type CreateUserResponse = Promise<
-  Either<Result<any> | UserEmailAlreadyExistsError, User>
+  Either<
+    Result<any> | UsernameAlreadyExistsError | UserEmailAlreadyExistsError,
+    User
+  >
 >
 
 export class CreateUserUseCase
@@ -37,6 +41,13 @@ export class CreateUserUseCase
       const combinedFailResult = Result.fail(combinedPropsResult.error)
 
       return left(combinedFailResult.getError())
+    }
+
+    const usernameAlreadyExists =
+      await this.userRepository.findByUsername(username)
+
+    if (usernameAlreadyExists) {
+      return left(new UsernameAlreadyExistsError(username))
     }
 
     const userEmailAlreadyExists = await this.userRepository.findByEmail(email)

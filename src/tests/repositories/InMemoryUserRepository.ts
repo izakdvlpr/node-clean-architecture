@@ -8,6 +8,10 @@ export class InMemoryUserRepository implements UserRepository {
     return this.items.find((user) => user.id === id) ?? null
   }
 
+  async findByUsername(username: string): Promise<User | null> {
+    return this.items.find((user) => user.username === username) ?? null
+  }
+
   async findByEmail(email: string): Promise<User | null> {
     return this.items.find((user) => user.email === email) ?? null
   }
