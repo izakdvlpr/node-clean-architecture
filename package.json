@@ -1,19 +1,26 @@
 {
   "name": "node-clean-architecture",
   "version": "1.0.0",
-  "module": "src/index.ts",
-  "type": "module",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/izakdvlpr/node-clean-architecture.git"
+  },
+  "engines": {
+    "node": ">=14"
+  },
   "scripts": {
     "lint": "eslint ./ --ext \"js,ts\"",
     "lint:fix": "eslint ./ --ext \"js,ts\" --fix",
-    "prisma:pg:generate": "bunx prisma generate --schema src/infra/database/prisma/postgresql/schema.prisma",
-    "prisma:pg:migrations": "bunx prisma migrate dev --skip-generate --schema src/infra/database/prisma/postgresql/schema.prisma",
-    "test:all": "bun test",
-    "test:watch": "bun test --watch",
-    "test:cov": "bun test --coverage",
-    "dev": "bun run --watch src/index.ts",
-    "build": "bun build ./src/index.ts --outdir ./dist",
-    "start": "bun run dist/index.js"
+    "db:pg:gen": "prisma generate",
+    "db:pg:migrs": "prisma migrate dev --skip-generate",
+    "clean": "rimraf coverage dist",
+    "test": "cross-env NODE_ENV=test jest",
+    "test:watch": "cross-env NODE_ENV=test jest --watchAll",
+    "dev": "cross-env NODE_ENV=development tsx watch src/index.ts",
+    "build:files": "node esbuild.config.js",
+    "build": "run-s clean build:files",
+    "start": "cross-env NODE_ENV=production node dist/index"
   },
   "prisma": {
     "schema": "src/infra/database/prisma/postgresql/schema.prisma"
@@ -21,15 +28,28 @@
   "dependencies": {
     "@fastify/cors": "^8.4.1",
     "@prisma/client": "5.5.2",
+    "bcryptjs": "^2.4.3",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.3.1",
     "envalid": "^8.0.0",
-    "fastify": "latest"
+    "fastify": "latest",
+    "http-status-codes": "^2.3.0",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "@rocketseat/eslint-config": "^2.1.0",
-    "bun-types": "latest",
-    "prisma": "^5.5.2"
-  },
-  "peerDependencies": {
+    "@types/bcryptjs": "^2.4.5",
+    "@types/jest": "^29.5.6",
+    "@types/node": "^20.8.9",
+    "esbuild": "^0.19.5",
+    "fast-glob": "^3.3.1",
+    "jest": "^29.7.0",
+    "npm-run-all": "^4.1.5",
+    "prisma": "^5.5.2",
+    "rimraf": "^5.0.5",
+    "ts-jest": "^29.1.1",
+    "tsc-alias": "^1.8.8",
+    "tsx": "^3.14.0",
     "typescript": "^5.0.0"
   }
 }

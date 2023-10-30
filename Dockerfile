@@ -1,10 +1,7 @@
-FROM debian:11.6-slim
+FROM docker.io/node:lts-alpine
 
 WORKDIR /app
 
-RUN apt-get update -y
-RUN apt-get install -y openssl curl unzip
-
-RUN curl -fsSL https://bun.sh/install | bash
+RUN apk update && apk upgrade openssl
 
 CMD ["tail", "-f", "/dev/null"]

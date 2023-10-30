@@ -1,4 +1,5 @@
 import { Result } from '@/core/logic/Result'
+import bcrypt from 'bcryptjs'
 
 import { Guard } from '@/core/logic/Guard'
 import { ErrorBase } from '@/core/domain/ErrorBase'
@@ -14,13 +15,13 @@ export class Password {
     password: string,
     passwordHash: string,
   ): Promise<boolean> {
-    const isMatch = await Bun.password.verify(password, passwordHash)
+    const isMatch = await bcrypt.compare(password, passwordHash)
 
     return isMatch
   }
 
   static async generateHash(password: string): Promise<string> {
-    const hashedValue = await Bun.password.hash(password)
+    const hashedValue = await bcrypt.hash(password, 10)
 
     return hashedValue
   }

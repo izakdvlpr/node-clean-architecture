@@ -1,5 +1,3 @@
-import { describe, it, expect } from 'bun:test'
-
 import { Username } from './username'
 
 describe('Username', () => {

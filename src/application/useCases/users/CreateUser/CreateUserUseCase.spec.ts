@@ -1,5 +1,3 @@
-import { describe, beforeEach, it, expect } from 'bun:test'
-
 import { UserRepository } from '@/application/repositories/UserRepository'
 import { InMemoryUserRepository } from '@/tests/repositories/InMemoryUserRepository'
 import { createUser } from '@/tests/factories/UserFactory'

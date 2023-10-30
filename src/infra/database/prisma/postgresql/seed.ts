@@ -1,1 +1,3 @@
-export async function executeDatabaseSeeds(): Promise<void> {}
+export async function executeDatabaseSeeds(): Promise<void> {
+  //
+}
