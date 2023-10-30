@@ -7,13 +7,13 @@
     "url": "git+https://github.com/izakdvlpr/node-clean-architecture.git"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "scripts": {
     "lint": "eslint ./ --ext \"js,ts\"",
     "lint:fix": "eslint ./ --ext \"js,ts\" --fix",
-    "db:pg:gen": "prisma generate",
-    "db:pg:migrs": "prisma migrate dev --skip-generate",
+    "db:pg:gen": "npx prisma generate",
+    "db:pg:migrs": "npx prisma migrate dev --skip-generate",
     "clean": "rimraf coverage dist",
     "test": "cross-env NODE_ENV=test jest",
     "test:watch": "cross-env NODE_ENV=test jest --watchAll",
