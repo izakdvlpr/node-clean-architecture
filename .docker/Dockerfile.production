@@ -1,0 +1,51 @@
+FROM docker.io/node:lts-alpine AS install-all-dependencies
+
+WORKDIR /app
+
+RUN apk update && apk upgrade openssl
+
+COPY package.json ./
+
+RUN npm install
+RUN npm run db:pg:gen
+
+FROM docker.io/node:lts-alpine AS builder
+
+WORKDIR /app
+
+COPY --from=install-all-dependencies /app/node_modules ./node_modules
+COPY --from=install-all-dependencies /app/package.json ./package.json
+COPY --from=install-all-dependencies /app/package-lock.json ./package-lock.json
+
+COPY src src
+COPY tsconfig.json esbuild.config.js ./
+
+RUN npm run build
+
+FROM docker.io/node:lts-alpine AS install-prod-dependencies
+
+WORKDIR /app
+
+RUN apk update && apk upgrade openssl
+
+COPY package.json ./
+
+RUN npm install --omit=dev
+
+FROM docker.io/node:lts-alpine AS runner
+
+RUN apk add --no-cache dumb-init
+
+WORKDIR /app
+
+ENV NODE_ENV production
+
+COPY --from=install-prod-dependencies /app/node_modules ./node_modules
+COPY --from=install-prod-dependencies /app/package.json ./package.json
+COPY --from=install-prod-dependencies /app/package-lock.json ./package-lock.json
+
+COPY --from=builder /app/dist ./dist
+
+EXPOSE 5000
+
+CMD ["dumb-init", "npm", "run", "start"]

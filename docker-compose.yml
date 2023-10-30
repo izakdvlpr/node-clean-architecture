@@ -1,14 +1,28 @@
 version: "3.9"
 
 services:
-  app:
-    build: .
+  app_development:
+    build:
+      context: ./.docker
+      dockerfile: Dockerfile.development
     volumes:
       - ./:/app
     ports:
       - "5000:5000"
     depends_on:
       - postgres
+    profiles:
+      - development
+  app_production:
+    build:
+      context: ./.docker
+      dockerfile: Dockerfile.production
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+    profiles:
+      - production
   postgres:
     image: postgres:9.4
     restart: always
@@ -21,3 +35,16 @@ services:
       - POSTGRES_DB=node
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=docker
+    profiles:
+      - production
+      - development
+  pgadmin:
+    image: dpage/pgadmin4
+    tty: true
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@user.com
+      - PGADMIN_DEFAULT_PASSWORD=123456
+    ports:
+      - "9000:2345"
+    depends_on:
+      - postgres

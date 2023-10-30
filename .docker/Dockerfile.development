@@ -3,5 +3,6 @@ FROM docker.io/node:lts-alpine
 WORKDIR /app
 
 RUN apk update && apk upgrade openssl
+RUN apk add --no-cache bash
 
 CMD ["tail", "-f", "/dev/null"]
